@@ -1,2 +1,1 @@
-# little_blog
-Personal site
+LlttleBlog
