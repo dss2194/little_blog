@@ -1,0 +1,43 @@
+# This file is a template, and might need editing before it works on your project.
+# Full project: https://gitlab.com/pages/plain-html
+
+stages:
+    - build
+    - test
+    - deploy
+
+build_image:
+    stage: build
+    image: docker
+    services:
+        - docker:dind
+    script:
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker pull $CI_REGISTRY_IMAGE:latest
+        - docker build --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
+        - docker push $CI_REGISTRY_IMAGE:latest
+        - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+
+testing:
+    stage: test
+    image: docker
+    services:
+        - docker:dind
+    script:
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+pages:
+  stage: deploy
+  script:
+    - mkdir .public
+    - cp -r * .public
+    - mv .public public
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
+
+#stage: deploy_aws
+#    script:
+#        - aws s3 cp . s3://dssbuckettest/
