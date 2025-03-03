@@ -158,6 +158,10 @@ hr {
   }
 }
 
+.hobbies_link {
+  color: #2d2d2d;
+}
+
 /* Dark Grey Wrap */
 
 #dg {
@@ -239,7 +243,7 @@ hr {
 /****** SECTIONS *****/
 
 .w {
-  padding-top: 35px;
+  padding-top: 20px;
 }
 
 .w h4 {
